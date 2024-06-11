@@ -34,13 +34,18 @@ while gamelive :
             pygame.quit() # Quit the screen
             exit()
         
-        if event.type == pygame.KEYDOWN:
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
+            player_gravity = -20
+
+        ''' if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
-                player_gravity = -20
+                player_gravity = -20 '''
  
         if event.type == pygame.MOUSEBUTTONDOWN: # when the mouse moves
             if player_rect.collidepoint(event.pos) and player_rect.bottom >= 300: # see if mouse collides with player rect
                 player_gravity = -20
+
 
     screen.blit(sky_surface,(0,0)) # add one surface to annother
     screen.blit(ground_surface,(0,300)) # add the ground
@@ -58,6 +63,11 @@ while gamelive :
     if player_rect.bottom >= 300:
         player_rect.bottom = 300
     screen.blit(player_surf,player_rect) # apply rectangle to the screen
+    player_rect.x += 5
+    if player_rect.right >= 800:
+        player_rect.right = 800
+    elif player_rect.left <= 0:
+        player_rect.left = 0
     
     ''' keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE]:
