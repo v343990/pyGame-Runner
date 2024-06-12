@@ -1,9 +1,6 @@
 import pygame
 from sys import exit # just to close game
 
-def menu():
-    screen.fill((25,200,16))
-
 def display_score():
     current_time = int(pygame.time.get_ticks() / 100) - start_time
     score_surf = test_font.render(f'{current_time}',False,(64,64,64))
@@ -34,6 +31,7 @@ ground_surface = pygame.image.load('graphics/ground.png').convert()
 player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80,300)) # ground is at 300
 player_gravity = 0
+player_speed = 5
 
 snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 snail_rect = snail_surface.get_rect(bottomright = (600,300))
@@ -43,13 +41,6 @@ while True:
         if event.type == pygame.QUIT: # When we call pygame.quit
             pygame.quit() # Quit the screen
             exit()
-        
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
-            player_gravity = -20
-        if keys[pygame.K_l]:
-            gamelive = False
-            menu()
 
         ''' if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
@@ -60,6 +51,18 @@ while True:
                 player_gravity = -20
 
     if gamelive:
+        
+        
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
+            player_gravity = -20
+        
+        if keys[pygame.K_LEFT]:
+            player_rect.x -= player_speed
+        
+        elif keys[pygame.K_RIGHT]:
+            player_rect.x += player_speed
+            
         screen.blit(sky_surface,(0,0)) # add one surface to annother
         screen.blit(ground_surface,(0,300)) # add the ground
         # pygame.draw.rect(screen,"#c0e8ec",score_rect,0,5) # pink rectangle
@@ -77,7 +80,11 @@ while True:
         if player_rect.bottom >= 300:
             player_rect.bottom = 300
         screen.blit(player_surf,player_rect) # apply rectangle to the screen
-
+        if player_rect.left < 0:
+            player_rect.right = screen_width
+        if player_rect.right > screen_width:
+            player_rect.left = 0
+        
         if snail_rect.colliderect(player_rect):
             gamelive = False
     else:
@@ -101,12 +108,8 @@ while True:
             if playagain_rect.collidepoint(event.pos):
                 gamelive = True
                 snail_rect.left = 800
+                player_rect.left = 80
                 start_time = int(pygame.time.get_ticks() / 100)
-        
-        if keys[pygame.K_SPACE]:
-            gamelive = True
-            snail_rect.left = 800
-            start_time = int(pygame.time.get_ticks() / 100)
             
 # All our elements in here
 # Where everything gets updated
