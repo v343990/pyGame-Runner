@@ -1,8 +1,11 @@
 import pygame
 from sys import exit # just to close game
 
+def menu():
+    screen.fill((25,200,16))
+
 def display_score():
-    current_time = pygame.time.get_ticks() - start_time
+    current_time = int(pygame.time.get_ticks() / 100) - start_time
     score_surf = test_font.render(f'{current_time}',False,(64,64,64))
     score_rect = score_surf.get_rect(center = (400,50))
     screen.blit(score_surf,score_rect)
@@ -28,7 +31,7 @@ ground_surface = pygame.image.load('graphics/ground.png').convert()
 # score_surf = test_font.render('My Game',False,(64,64,64))
 # score_rect = score_surf.get_rect(center  = (400,50)) # create rectangle for score
 
-player_surf = pygame.image.load('graphics/player/player_walk_1.png').convert_alpha()
+player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80,300)) # ground is at 300
 player_gravity = 0
 
@@ -44,6 +47,9 @@ while True:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
             player_gravity = -20
+        if keys[pygame.K_l]:
+            gamelive = False
+            menu()
 
         ''' if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and player_rect.bottom >= 300:
@@ -75,11 +81,33 @@ while True:
         if snail_rect.colliderect(player_rect):
             gamelive = False
     else:
-        screen.fill("Yellow")
+        screen.fill((25,200,16))
+        end_surf = test_font.render("Game Over",False,(64,64,64))
+        end_rect = end_surf.get_rect(center = (400,50))
+        screen.blit(end_surf,end_rect)
+        playagain_surf = test_font.render("Play Again?",False,"Black")
+        playagain_rect = playagain_surf.get_rect(center = (400, 150))
+        screen.blit(playagain_surf,playagain_rect)
+        quit_surf = test_font.render("Quit",False,"Red")
+        quit_rect = quit_surf.get_rect(center = (400,350))
+        screen.blit(quit_surf,quit_rect)
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if quit_rect.collidepoint(event.pos):
+                pygame.quit()
+                exit()
+                       
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if playagain_rect.collidepoint(event.pos):
+                gamelive = True
+                snail_rect.left = 800
+                start_time = int(pygame.time.get_ticks() / 100)
+        
         if keys[pygame.K_SPACE]:
             gamelive = True
             snail_rect.left = 800
-            start_time = pygame.time.get_ticks()
+            start_time = int(pygame.time.get_ticks() / 100)
+            
 # All our elements in here
 # Where everything gets updated
     pygame.display.update()
