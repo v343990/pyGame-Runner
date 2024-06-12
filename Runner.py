@@ -57,6 +57,10 @@ while True:
         if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
             player_gravity = -20
         
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] and player_rect.bottom >= 300:
+            player_gravity = -20
+        
         if keys[pygame.K_LEFT]:
             player_rect.x -= player_speed
         
@@ -80,10 +84,10 @@ while True:
         if player_rect.bottom >= 300:
             player_rect.bottom = 300
         screen.blit(player_surf,player_rect) # apply rectangle to the screen
-        if player_rect.left < 0:
-            player_rect.right = screen_width
-        if player_rect.right > screen_width:
-            player_rect.left = 0
+        if player_rect.right < 0:
+            player_rect.left = screen_width
+        if player_rect.left > screen_width:
+            player_rect.right = 0
         
         if snail_rect.colliderect(player_rect):
             gamelive = False
