@@ -25,13 +25,26 @@ start_time = 0
 sky_surface = pygame.image.load('graphics/Sky.png').convert()
 ground_surface = pygame.image.load('graphics/ground.png').convert()
 
+#  Background positions
+sky_x_pos = 0
+sky_x_pos1 = screen_width
+ground_x_pos = 0
+ground_x_pos1 = screen_width
+scroll_speed = 5
+
+left_boundary = 200
+right_boundary = screen_width - 200
+
 # score_surf = test_font.render('My Game',False,(64,64,64))
 # score_rect = score_surf.get_rect(center  = (400,50)) # create rectangle for score
 
+# player stuff
 player_surf = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80,300)) # ground is at 300
 player_gravity = 0
 player_speed = 5
+
+
 
 snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
 snail_rect = snail_surface.get_rect(bottomright = (600,300))
@@ -52,7 +65,26 @@ while True:
 
     if gamelive:
         
-        
+
+        # Player Movement with scrolling background
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RIGHT]:
+            if player_rect.right < right_boundary: # If not within boundary then
+                player_rect.x += player_speed      # player will move to the boundary
+            else:
+                sky_x_pos -= player_speed   
+                sky_x_pos1 -= player_speed        # If in boundary sky and ground
+                ground_x_pos -= player_speed      # Sky and ground will move instead
+                ground_x_pos1 -= player_speed
+        if keys[pygame.K_LEFT]:
+            if player_rect.left > left_boundary:
+                player_rect.x -= player_speed
+            else:
+                sky_x_pos += player_speed
+                sky_x_pos1 += player_speed
+                ground_x_pos += player_speed
+                ground_x_pos1 +- player_speed
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
             player_gravity = -20
@@ -61,14 +93,11 @@ while True:
         if keys[pygame.K_UP] and player_rect.bottom >= 300:
             player_gravity = -20
         
-        if keys[pygame.K_LEFT]:
-            player_rect.x -= player_speed
-        
-        elif keys[pygame.K_RIGHT]:
-            player_rect.x += player_speed
-            
-        screen.blit(sky_surface,(0,0)) # add one surface to annother
-        screen.blit(ground_surface,(0,300)) # add the ground
+        screen.blit(sky_surface,(sky_x_pos, 0)) # add one surface to another
+        screen.blit(sky_surface, (sky_x_pos1, 0))
+        screen.blit(ground_surface,(ground_x_pos, 300)) # add the ground
+        screen.blit(ground_surface,(ground_x_pos1, 300))
+
         # pygame.draw.rect(screen,"#c0e8ec",score_rect,0,5) # pink rectangle
         # pygame.draw.line(screen,"Gold",(0,0),pygame.mouse.get_pos(),10)
         # screen.blit(score_surf,score_rect) # add the text
@@ -84,10 +113,10 @@ while True:
         if player_rect.bottom >= 300:
             player_rect.bottom = 300
         screen.blit(player_surf,player_rect) # apply rectangle to the screen
-        if player_rect.right < 0:
+        '''if player_rect.right < 0:
             player_rect.left = screen_width
         if player_rect.left > screen_width:
-            player_rect.right = 0
+            player_rect.right = 0 '''
         
         if snail_rect.colliderect(player_rect):
             gamelive = False
