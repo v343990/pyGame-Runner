@@ -63,8 +63,8 @@ while True:
             if player_rect.collidepoint(event.pos) and player_rect.bottom >= 300: # see if mouse collides with player rect
                 player_gravity = -20
 
+
     if gamelive:
-        
 
         # Player Movement with scrolling background
         keys = pygame.key.get_pressed()
