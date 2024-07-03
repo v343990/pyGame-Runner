@@ -83,7 +83,7 @@ while True:
                 sky_x_pos += player_speed
                 sky_x_pos1 += player_speed
                 ground_x_pos += player_speed
-                ground_x_pos1 +- player_speed
+                ground_x_pos1 += player_speed
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and player_rect.bottom >= 300:
